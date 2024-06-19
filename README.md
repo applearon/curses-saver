@@ -14,6 +14,7 @@ To build with debug information, pass the `DEBUG_BUILD=1` environment variable t
 # Keybinds
 
 * h to enable hyperspeed
+* g to enable multi-color
 * f4 to enable debug menu
 * q/Ctrl-C to exit
 

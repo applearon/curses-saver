@@ -65,6 +65,7 @@ void *mainLoop(void *inp) {
     int color = 0;
     //clear();
     bool hyper_speed = false;
+    bool gay = false;
     bool debug = false;
         while (true) {
         timeout(0);
@@ -84,8 +85,12 @@ void *mainLoop(void *inp) {
                 return NULL;
             } break;
             case 104: { // h
-                    hyper_speed = !hyper_speed;
+                hyper_speed = !hyper_speed;
             } break;
+            case 103: { // g
+                gay = !gay;
+                init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
+            }
             case KEY_F(4): { // esc
                     debug = !debug;
             } break;
@@ -112,8 +117,10 @@ void *mainLoop(void *inp) {
         }
         y += y_dir * y_mag;
         x += x_dir * x_mag;
-        color = (color % 70) + 1;
-        init_pair(1, (color / 10) + 1, COLOR_BLACK);
+        if (gay) {
+            color = (color % 70) + 1;
+            init_pair(1, (color / 10) + 1, COLOR_BLACK);
+        }
         times = (times + 1) % fadeOut;
         lastFiveX[times] = x;
         lastFiveY[times] = y;
