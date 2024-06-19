@@ -74,7 +74,8 @@ void *mainLoop(void *inp) {
         }
         //*input = getch();
         switch (input) {
-            case 3: {
+            case 113: // Q
+            case 3: { // ctrl-c
                 //endwin();
                 move(0, 0);
                 printw("uwu");
