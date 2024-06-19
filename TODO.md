@@ -1,10 +1,9 @@
-Change colour on hit
-hyperspeed
-literally a phyics engine
--> shatters on impact (split into two ;p)
-SPEEN
+* Option to change colour on hit
+* Support for multiple objects
+    * Collision
+    * Object shatter/split on impact
+* Rotate-able objects
 
+* Interactable Mode
+    * Pong-style game
 
-
-Game-engine this
--> PONG
