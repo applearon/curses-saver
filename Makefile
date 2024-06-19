@@ -13,8 +13,8 @@ endif
 
 BINARY=curses-saver
 OUT=./out
-OBJS=$(patsubst src/%.c,out/%.o,$(wildcard src/*.c))
-SRC=$(wildcard src/*.c)
+OBJS=$(patsubst src/%.cpp,out/%.o,$(wildcard src/*.cpp))
+SRC=$(wildcard src/*.cpp)
 
 dir_guard=@mkdir -p $(@D)
 
@@ -25,7 +25,7 @@ all: directories ./out/$(BINARY)
 ./out/$(BINARY): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(OUT)/$(BINARY) $(LDFLAGS)
 
-$(OBJS): out/%.o : src/%.c
+$(OBJS): out/%.o : src/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
@@ -37,5 +37,5 @@ ${OUT}:
 	$(dir_guard) $(OUT)
 
 
-run:
+run: ${OUT} ./out/$(BINARY)
 	./out/$(BINARY) ./examples/arch

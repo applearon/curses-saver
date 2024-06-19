@@ -5,6 +5,7 @@
 #include<stdio.h>
 #include<stdbool.h>
 #include<sys/stat.h>
+#include<vector>
 //#include "config.h"
 #include "logo.h"
 
@@ -60,8 +61,8 @@ void *mainLoop(void *inp) {
     SLEEP_FUNC(sleep_time);
     int times = 0;
     int fadeOut = 2 + 0; // n showing at any time
-    int *lastFiveX = (int *) calloc(fadeOut, sizeof(int));
-    int *lastFiveY = (int *) calloc(fadeOut, sizeof(int));
+    std::vector<int> lastFiveX(fadeOut);
+    std::vector<int> lastFiveY(fadeOut);
     int color = 0;
     //clear();
     bool hyper_speed = false;
@@ -79,8 +80,6 @@ void *mainLoop(void *inp) {
                 //endwin();
                 move(0, 0);
                 printw("uwu");
-                free(lastFiveX);
-                free(lastFiveY);
                 return NULL;
             } break;
             case 104: { // h
@@ -130,8 +129,6 @@ void *mainLoop(void *inp) {
             SLEEP_FUNC(sleep_time);
         }
     }
-    free(lastFiveY);
-    free(lastFiveX);
     return NULL;
 }
 

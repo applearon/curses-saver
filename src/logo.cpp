@@ -31,14 +31,6 @@ int count_lines(FILE* file) {
     return counter;
 }
 
-void getLogo(char *logo, int slope, int *logo_len, int *logo_height) {
-    *logo_len = 4;
-    *logo_height = 2;
-    logo = (char *) realloc(logo, sizeof(char) * ((*logo_len) * (*logo_height)));
-    strcpy(logo, "~~~~");
-    strcat(logo, "----");
-}
-
 //const char **getLogoFromFile(char *filename, int *logo_len, int*logo_height, bool *exit_code) {
 //    *logo_height = 0;
 //    FILE *file = fopen(filename, "r");
