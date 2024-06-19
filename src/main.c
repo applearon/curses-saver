@@ -49,7 +49,7 @@ void *mainLoop(void *inp) {
     int frame_rate = data->frame_rate;
     int sleep_time = SLEEP_TIME / frame_rate; 
     int input = -1;
-    int last_inp = -1; // most recent input
+    //int last_inp = -1; // most recent input
     int rows,cols = 0;
     getmaxyx(stdscr, cols, rows);
     int x_dir = -1;
@@ -70,12 +70,11 @@ void *mainLoop(void *inp) {
         while (true) {
         timeout(0);
         input = getch();
-        if (input != -1) {
-            last_inp = input;
-        }
-        //*input = getch();
+       //if (input != -1) {
+       //    last_inp = input;
+       //}
         switch (input) {
-            case 113: // Q
+            case 113: // q
             case 3: { // ctrl-c
                 //endwin();
                 move(0, 0);
