@@ -1,14 +1,15 @@
 CFLAGS=-Wall -g
 LDFLAGS=-lncurses
-
+IS_DEBUG = ${DEBUG_BUILD}
 CC=
 ifeq ($(OS), Windows_NT)
 	CC += x86_64-w64-mingw32-gcc
 else
 	CC += gcc
+endif
+ifeq ($(IS_DEBUG), 1)
 	CFLAGS += -fsanitize=address
 endif
-
 
 BINARY=curses-saver
 OUT=./out
