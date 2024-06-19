@@ -34,7 +34,7 @@ int count_lines(FILE* file) {
 void getLogo(char *logo, int slope, int *logo_len, int *logo_height) {
     *logo_len = 4;
     *logo_height = 2;
-    logo = realloc(logo, sizeof(char) * ((*logo_len) * (*logo_height)));
+    logo = (char *) realloc(logo, sizeof(char) * ((*logo_len) * (*logo_height)));
     strcpy(logo, "~~~~");
     strcat(logo, "----");
 }
@@ -94,7 +94,7 @@ char **getLogoFromFile(char *filename, int *logo_len, int *num_lines, bool *exit
         return NULL;
     }
 
-    char **lines = malloc(INITIAL_ARRAY_SIZE * sizeof(char *));
+    char **lines = (char **) malloc(INITIAL_ARRAY_SIZE * sizeof(char *));
     if (!lines) {
         perror("Failed to allocate memory");
         fclose(file);
@@ -103,7 +103,7 @@ char **getLogoFromFile(char *filename, int *logo_len, int *num_lines, bool *exit
     }
 
     size_t buffer_size = INITIAL_BUFFER_SIZE;
-    char *buffer = malloc(buffer_size);
+    char *buffer = (char *) malloc(buffer_size);
     if (!buffer) {
         perror("Failed to allocate buffer memory");
         free(lines);
@@ -120,7 +120,7 @@ char **getLogoFromFile(char *filename, int *logo_len, int *num_lines, bool *exit
         // Handle lines longer than buffer_size
         while (len == buffer_size - 1 && buffer[len - 1] != '\n') {
             buffer_size *= 2;
-            buffer = realloc(buffer, buffer_size);
+            buffer = (char *) realloc(buffer, buffer_size);
             if (!buffer) {
                 perror("Failed to reallocate buffer memory");
                 for (int i = 0; i < *num_lines; ++i) {
@@ -156,7 +156,7 @@ char **getLogoFromFile(char *filename, int *logo_len, int *num_lines, bool *exit
         (*num_lines)++;
         if (*num_lines >= array_size) {
             array_size *= 2;
-            lines = realloc(lines, array_size * sizeof(char *));
+            lines = (char **) realloc(lines, array_size * sizeof(char *));
             if (!lines) {
                 perror("Failed to reallocate lines memory");
                 for (int i = 0; i < *num_lines; ++i) {
@@ -194,7 +194,7 @@ void printLogo(char **logo, int y, int x, int logo_len, int logo_height) {
 //};
 
 void clearLogo(int y, int x, int logo_len, int logo_height) {
-    char *temp = malloc(sizeof(char) * (logo_len + 1));
+    char *temp = (char *) malloc(sizeof(char) * (logo_len + 1));
     //temp[0] = '\0';
     //strcpy(temp, "");
     for (int i = 0; i < logo_len; ++i) {

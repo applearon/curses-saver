@@ -60,8 +60,8 @@ void *mainLoop(void *inp) {
     SLEEP_FUNC(sleep_time);
     int times = 0;
     int fadeOut = 2 + 0; // n showing at any time
-    int *lastFiveX = calloc(fadeOut, sizeof(int));
-    int *lastFiveY = calloc(fadeOut, sizeof(int));
+    int *lastFiveX = (int *) calloc(fadeOut, sizeof(int));
+    int *lastFiveY = (int *) calloc(fadeOut, sizeof(int));
     int color = 0;
     //clear();
     bool hyper_speed = false;
