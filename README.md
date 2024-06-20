@@ -19,3 +19,5 @@ To build with debug information, pass the `DEBUG_BUILD=1` environment variable t
 * q/Ctrl-C to exit
 
 
+# Credits
+The examples were made with icons from neofetch, as well as the figlet command

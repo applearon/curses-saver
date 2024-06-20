@@ -88,7 +88,7 @@ void *mainLoop(void *inp) {
             case 103: { // g
                 gay = !gay;
                 init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
-            }
+            } break;
             case KEY_F(4): { // esc
                     debug = !debug;
             } break;
