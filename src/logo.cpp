@@ -1,4 +1,4 @@
-#include "logo.h"
+#include "logo.hpp"
 #include <ncurses.h>
 #include <string.h>
 #include <stdbool.h>

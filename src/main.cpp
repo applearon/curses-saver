@@ -5,9 +5,11 @@
 #include<stdio.h>
 #include<stdbool.h>
 #include<sys/stat.h>
+// C++ stuffs yeah idk
 #include<vector>
-//#include "config.h"
-#include "logo.h"
+#include <chrono>
+#include "config.hpp"
+#include "logo.hpp"
 
 #ifdef _WIN32
 #include<windows.h>
@@ -43,8 +45,6 @@ void *mainLoop(void *inp) {
 
     struct loopData *data = (struct loopData *) inp;
     char **logo = data->logo;
-    //int *input = data->inp;
-    //bool *new_inp = data->new_inp;
     int logo_len = data->logo_len;
     int logo_height = data->logo_height;
     int frame_rate = data->frame_rate;
@@ -77,7 +77,6 @@ void *mainLoop(void *inp) {
         switch (input) {
             case 113: // q
             case 3: { // ctrl-c
-                //endwin();
                 move(0, 0);
                 printw("uwu");
                 return NULL;
@@ -96,8 +95,8 @@ void *mainLoop(void *inp) {
             }
         }
         getmaxyx(stdscr, cols, rows);
-        //clearLogo(lastFiveY[(times + 1) % fadeOut], lastFiveX[(times + 1) % fadeOut], logo_len, logo_height);
-        clear();
+        clearLogo(lastFiveY[(times + 1) % fadeOut], lastFiveX[(times + 1) % fadeOut], logo_len, logo_height);
+        //clear();
         printLogo(logo, y, x, logo_len, logo_height);
         if (debug) {
             move(0,0);
