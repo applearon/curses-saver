@@ -93,9 +93,7 @@ void *mainLoop(void *inp) {
         curFrame = std::chrono::steady_clock::now();
         if (curFrame - prevFrame >= chrono_sleep_time || hyper_speed) {
         getmaxyx(stdscr, cols, rows);
-        clearLogo(lastFiveY[(times + 1) % fadeOut], lastFiveX[(times + 1) % fadeOut], logo_len, logo_height);
         //clear();
-        printLogo(logo, y, x, logo_len, logo_height);
         if (debug) {
             move(0,0);
             printw("%d\n%d", input, color / 5);
@@ -120,6 +118,8 @@ void *mainLoop(void *inp) {
         lastFiveX[times] = x;
         lastFiveY[times] = y;
         prevFrame = curFrame;
+        clearLogo(lastFiveY[(times + 1) % fadeOut], lastFiveX[(times + 1) % fadeOut], logo_len, logo_height);
+        printLogo(logo, y, x, logo_len, logo_height);
         refresh();
         }
     }
