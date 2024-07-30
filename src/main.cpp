@@ -7,8 +7,7 @@
 #include<sys/stat.h>
 // C++ stuffs yeah idk
 #include<vector>
-#include <chrono>
-#include "config.hpp"
+//#include "config.hpp"
 #include "logo.hpp"
 
 #ifdef _WIN32
@@ -17,7 +16,7 @@
 #define SLEEP_FUNC Sleep
 #define SLEEP_TIME 1000 // Sleep -> milliseconds
 #else
-#include<unistd.h> // NO WINDOWS ONLY LINUX
+#include<unistd.h>
 #define SLEEP_FUNC usleep
 #define SLEEP_TIME 1000000 // usleep -> microseconds
 #endif
@@ -25,7 +24,7 @@
 struct loopData {
     int *inp;
     bool *new_inp;
-    char **logo;
+    std::vector<std::string>logo;
     int logo_len;
     int logo_height;
     int frame_rate;
@@ -44,7 +43,7 @@ void *mainLoop(void *inp) {
     init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
 
     struct loopData *data = (struct loopData *) inp;
-    char **logo = data->logo;
+    std::vector<std::string> logo = data->logo;
     int logo_len = data->logo_len;
     int logo_height = data->logo_height;
     int frame_rate = data->frame_rate;
@@ -148,7 +147,7 @@ int main(int argc, char *argv[0]) {
     bool file_succ;
     int logo_len = 0;
     int logo_height = 0;
-    char **logo = getLogoFromFile(file_path, &logo_len, &logo_height, &file_succ);
+    std::vector<std::string> logo = getLogoFromFile(file_path, &logo_len, &logo_height, &file_succ);
     if (!file_succ) {
         endwin();
         printf("File %s couldn't be opened.\n", file_path);
@@ -174,11 +173,10 @@ int main(int argc, char *argv[0]) {
    // }
     //pthread_join(main_loop, NULL);
     endwin();
+    //for (int i = 0; i < logo_height; ++i) {
+    //    free(logo[i]);
+    //}
     //free(logo);
-    for (int i = 0; i < logo_height; ++i) {
-        free(logo[i]);
-    }
-    free(logo);
     //pthread_mutex_destroy(&lock);
     printf("Exiting gracefully...\n");
     return 0;
