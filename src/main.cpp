@@ -7,18 +7,14 @@
 #include<sys/stat.h>
 // C++ stuffs yeah idk
 #include<vector>
+#include<chrono>
 //#include "config.hpp"
 #include "logo.hpp"
 
 #ifdef _WIN32
 #include<windows.h>
-
-#define SLEEP_FUNC Sleep
-#define SLEEP_TIME 1000 // Sleep -> milliseconds
 #else
 #include<unistd.h>
-#define SLEEP_FUNC usleep
-#define SLEEP_TIME 1000000 // usleep -> microseconds
 #endif
 
 struct loopData {
@@ -47,7 +43,7 @@ void *mainLoop(void *inp) {
     int logo_len = data->logo_len;
     int logo_height = data->logo_height;
     int frame_rate = data->frame_rate;
-    int sleep_time = SLEEP_TIME / frame_rate; 
+    std::chrono::milliseconds chrono_sleep_time(1000 / frame_rate);
     int input = -1;
     //int last_inp = -1; // most recent input
     int rows,cols = 0;
@@ -57,7 +53,6 @@ void *mainLoop(void *inp) {
     int y_mag = 1, x_mag = 2; // Slope
 
     int x = 20,y = 20;
-    SLEEP_FUNC(sleep_time);
     int times = 0;
     int fadeOut = 2 + 0; // n showing at any time
     std::vector<int> lastFiveX(fadeOut);
@@ -67,6 +62,8 @@ void *mainLoop(void *inp) {
     bool hyper_speed = false;
     bool gay = false;
     bool debug = false;
+    std::chrono::time_point<std::chrono::steady_clock> prevFrame = std::chrono::steady_clock::now();
+    std::chrono::time_point<std::chrono::steady_clock> curFrame = std::chrono::steady_clock::now();
         while (true) {
         timeout(0);
         input = getch();
@@ -93,6 +90,8 @@ void *mainLoop(void *inp) {
             default: {
             }
         }
+        curFrame = std::chrono::steady_clock::now();
+        if (curFrame - prevFrame >= chrono_sleep_time || hyper_speed) {
         getmaxyx(stdscr, cols, rows);
         clearLogo(lastFiveY[(times + 1) % fadeOut], lastFiveX[(times + 1) % fadeOut], logo_len, logo_height);
         //clear();
@@ -120,11 +119,8 @@ void *mainLoop(void *inp) {
         times = (times + 1) % fadeOut;
         lastFiveX[times] = x;
         lastFiveY[times] = y;
-        //if (times != 1) {
+        prevFrame = curFrame;
         refresh();
-        //}
-        if (!hyper_speed) {
-            SLEEP_FUNC(sleep_time);
         }
     }
     return NULL;
@@ -162,7 +158,8 @@ int main(int argc, char *argv[0]) {
     //}
     int input = INT_MIN;
     bool new_inp = true;
-    struct loopData loopData = {&input, &new_inp, logo, logo_len, logo_height, 15};
+    int fps = 15;
+    struct loopData loopData = {&input, &new_inp, logo, logo_len, logo_height, fps};
     //pthread_create(&main_loop, NULL, mainLoop, &loopData);
     mainLoop(&loopData);
    // while (input != 3) {
