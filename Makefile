@@ -4,6 +4,7 @@ IS_DEBUG = ${DEBUG_BUILD}
 CC=
 ifeq ($(OS), Windows_NT)
 	CC += x86_64-w64-mingw32-g++
+	CFLAGS += -static -static-libgcc -static-libstdc++
 else
 	CC += g++
 endif
