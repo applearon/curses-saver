@@ -24,7 +24,6 @@ std::vector<std::string> getLogoFromFile(char *filename, int *logo_len, int *num
     std::string line;
     std::vector<std::string> output;
     while (std::getline(file, line)) {
-        *logo_len = std::max(5,4);
         *logo_len = std::max<int>(line.length(), *logo_len);
         ++*num_lines;
         output.resize(*num_lines);
@@ -50,17 +49,12 @@ void printLogo(std::vector<std::string> logo, int y, int x, int logo_len, int lo
 
 
 void clearLogo(int y, int x, int logo_len, int logo_height) {
-    char *temp = (char *) malloc(sizeof(char) * (logo_len + 1));
-    //temp[0] = '\0';
-    //strcpy(temp, "");
-    for (int i = 0; i < logo_len; ++i) {
-        //strcat(temp, " ");
-        temp[i] = ' ';
+    std::string tmp = "";
+    for (int i = 0; i <= logo_len; ++i) {
+        tmp.append(" ");
     }
-    temp[logo_len] = '\0';
     for (int i = 0; i < logo_height; ++i) {
         move(y + i, x);
-        printw("%s", temp);
-   }
-    free(temp);
+        printw("%s", tmp.data());
+    }
 }
