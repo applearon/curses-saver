@@ -15,13 +15,18 @@ struct pos {
 class Logo {
 
     public:
-        struct pos pos;
-        struct pos size;
-        std::vector<std::string> logo;
         Logo(int y, int x, int height, int length, std::vector<std::string> &logo);
+        bool move(int y, int x, const pos &min_size, const pos &max_size);
+        bool put(int y, int x, const pos &min_size, const pos &max_size);
         bool print();
         bool clear();
+
+        const pos getPos();
+        const pos getSize();
     private:
+        pos position;
+        pos size;
+        std::vector<std::string> logo;
 };
 
 #endif

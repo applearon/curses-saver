@@ -48,8 +48,6 @@ void *mainLoop(void *inp) {
     int y_dir = -1;
     int y_mag = 1, x_mag = 2; // Slope
 
-    //int x = 20,y = 20;
-    logo.pos = {20, 20};
     int times = 0;
     int fadeOut = 2 + 0; // n showing at any time
     std::vector<int> lastFiveX(fadeOut);
@@ -95,28 +93,29 @@ void *mainLoop(void *inp) {
             move(0,0);
             printw("%d\n%d", input, color / 5);
         }
-        if (logo.pos.y >= cols - logo.size.y) {
+        if (logo.getPos().y >= cols - logo.getSize().y) {
             y_dir = -1;
-        } else if (logo.pos.y <= 0) {
+        } else if (logo.getPos().y <= 0) {
             y_dir = 1;
         }
-        if (logo.pos.x >= rows - logo.size.x) {
+        if (logo.getPos().x >= rows - logo.getSize().x) {
             x_dir = -1;
-        } else if (logo.pos.x <= 1) {
+        } else if (logo.getPos().x <= 1) {
             x_dir = 1;
         }
-        logo.clear();
-        logo.pos.y += y_dir * y_mag;
-        logo.pos.x += x_dir * x_mag;
+        //logo.clear();
+        //logo.pos.y += y_dir * y_mag;
+        //logo.pos.x += x_dir * x_mag;
         if (gay) {
             color = (color % 70) + 1;
             init_pair(1, (color / 10) + 1, COLOR_BLACK);
         }
         times = (times + 1) % fadeOut;
-        lastFiveX[times] = logo.pos.x;
-        lastFiveY[times] = logo.pos.y;
+        lastFiveX[times] = logo.getPos().x;
+        lastFiveY[times] = logo.getPos().y;
         prevFrame = curFrame;
-        logo.print();
+        logo.move(y_dir * y_mag, x_dir * x_mag, {0, 0}, {rows, cols});
+        //logo.print();
         //clearLogo(lastFiveY[(times + 1) % fadeOut], lastFiveX[(times + 1) % fadeOut], logo_len, logo_height);
         //printLogo(logo, y, x, logo_len, logo_height);
         refresh();

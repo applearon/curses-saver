@@ -35,16 +35,16 @@ std::vector<std::string> getLogoFromFile(char *filename, int *logo_len, int *num
 }
 
 Logo::Logo(int y, int x, int height, int length, std::vector<std::string> &logo) {
-    this->pos = {y, x};
+    this->position = {y, x};
     this->size = {height, length};
     this->logo = logo;
 };
 
 bool Logo::print() {
-    move(pos.y, pos.x);
+    ::move(position.y, position.x);
     attron(COLOR_PAIR(1));
     for (int i = 0; i < size.y; ++i) {
-        move(pos.y + i, pos.x);
+        ::move(position.y + i, position.x);
         printw("%s", logo[i].data());
     }
     attroff(COLOR_PAIR(1));
@@ -54,9 +54,31 @@ bool Logo::print() {
 bool Logo::clear() {
             std::string tmp(size.x, ' ');
             for (int i = 0; i < size.y; ++i) {
-                move(pos.y + i, pos.x);
+                ::move(position.y + i, position.x);
                 printw("%s", tmp.data());
             }
             return true;
-        }
+}
 
+bool Logo::move(int y, int x, const pos &min_size, const pos &max_size) {
+    clear();
+    this->position.y += y;
+    this->position.x += x;
+    print();
+    return true;
+}
+
+bool Logo::put(int y, int x, const pos &min_size, const pos &max_size) {
+    clear();
+    this->position.y = y;
+    this->position.x = x;
+    print();
+    return true;
+}
+
+const pos Logo::getPos() {
+    return this->position;
+}
+const pos Logo::getSize() {
+    return this->size;
+}
