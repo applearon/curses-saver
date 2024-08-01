@@ -34,27 +34,29 @@ std::vector<std::string> getLogoFromFile(char *filename, int *logo_len, int *num
     return output;
 }
 
-void printLogo(std::vector<std::string> logo, int y, int x, int logo_len, int logo_height) {
-    move(y, x);
+Logo::Logo(int y, int x, int height, int length, std::vector<std::string> &logo) {
+    this->pos = {y, x};
+    this->size = {height, length};
+    this->logo = logo;
+};
+
+bool Logo::print() {
+    move(pos.y, pos.x);
     attron(COLOR_PAIR(1));
-    //char *temp = malloc(sizeof(char) * logo_len);
-    for (int i = 0; i < logo_height; ++i) {
-        //strncpy(temp, logo + (i * logo_len), logo_len);
-        move(y + i, x);
+    for (int i = 0; i < size.y; ++i) {
+        move(pos.y + i, pos.x);
         printw("%s", logo[i].data());
     }
     attroff(COLOR_PAIR(1));
-    //free(temp);
-}
+    return true;
+};
 
+bool Logo::clear() {
+            std::string tmp(size.x, ' ');
+            for (int i = 0; i < size.y; ++i) {
+                move(pos.y + i, pos.x);
+                printw("%s", tmp.data());
+            }
+            return true;
+        }
 
-void clearLogo(int y, int x, int logo_len, int logo_height) {
-    std::string tmp = "";
-    for (int i = 0; i <= logo_len; ++i) {
-        tmp.append(" ");
-    }
-    for (int i = 0; i < logo_height; ++i) {
-        move(y + i, x);
-        printw("%s", tmp.data());
-    }
-}

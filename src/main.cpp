@@ -20,9 +20,7 @@
 struct loopData {
     int *inp;
     bool *new_inp;
-    std::vector<std::string>logo;
-    int logo_len;
-    int logo_height;
+    Logo &logo;
     int frame_rate;
 };
 
@@ -39,9 +37,7 @@ void *mainLoop(void *inp) {
     init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
 
     struct loopData *data = (struct loopData *) inp;
-    std::vector<std::string> logo = data->logo;
-    int logo_len = data->logo_len;
-    int logo_height = data->logo_height;
+    Logo logo = data->logo;
     int frame_rate = data->frame_rate;
     std::chrono::milliseconds chrono_sleep_time(1000 / frame_rate);
     int input = -1;
@@ -52,7 +48,8 @@ void *mainLoop(void *inp) {
     int y_dir = -1;
     int y_mag = 1, x_mag = 2; // Slope
 
-    int x = 20,y = 20;
+    //int x = 20,y = 20;
+    logo.pos = {20, 20};
     int times = 0;
     int fadeOut = 2 + 0; // n showing at any time
     std::vector<int> lastFiveX(fadeOut);
@@ -98,28 +95,30 @@ void *mainLoop(void *inp) {
             move(0,0);
             printw("%d\n%d", input, color / 5);
         }
-        if (y >= cols - logo_height) {
+        if (logo.pos.y >= cols - logo.size.y) {
             y_dir = -1;
-        } else if (y <= 0) {
+        } else if (logo.pos.y <= 0) {
             y_dir = 1;
         }
-        if (x >= rows - logo_len) {
+        if (logo.pos.x >= rows - logo.size.x) {
             x_dir = -1;
-        } else if (x <= 1) {
+        } else if (logo.pos.x <= 1) {
             x_dir = 1;
         }
-        y += y_dir * y_mag;
-        x += x_dir * x_mag;
+        logo.clear();
+        logo.pos.y += y_dir * y_mag;
+        logo.pos.x += x_dir * x_mag;
         if (gay) {
             color = (color % 70) + 1;
             init_pair(1, (color / 10) + 1, COLOR_BLACK);
         }
         times = (times + 1) % fadeOut;
-        lastFiveX[times] = x;
-        lastFiveY[times] = y;
+        lastFiveX[times] = logo.pos.x;
+        lastFiveY[times] = logo.pos.y;
         prevFrame = curFrame;
-        clearLogo(lastFiveY[(times + 1) % fadeOut], lastFiveX[(times + 1) % fadeOut], logo_len, logo_height);
-        printLogo(logo, y, x, logo_len, logo_height);
+        logo.print();
+        //clearLogo(lastFiveY[(times + 1) % fadeOut], lastFiveX[(times + 1) % fadeOut], logo_len, logo_height);
+        //printLogo(logo, y, x, logo_len, logo_height);
         refresh();
         }
     }
@@ -156,10 +155,11 @@ int main(int argc, char *argv[0]) {
     //   printf("\nMutex init failed :(\n");
     //    return 1;
     //}
+    Logo logo_obj(0, 0, logo_height, logo_len, logo);
     int input = INT_MIN;
     bool new_inp = true;
     int fps = 15;
-    struct loopData loopData = {&input, &new_inp, logo, logo_len, logo_height, fps};
+    struct loopData loopData = {&input, &new_inp, logo_obj, fps};
     //pthread_create(&main_loop, NULL, mainLoop, &loopData);
     mainLoop(&loopData);
    // while (input != 3) {

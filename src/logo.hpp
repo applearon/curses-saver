@@ -6,9 +6,22 @@
 
 std::vector<std::string> getLogoFromFile(char *filename, int *logo_len, int *num_lines, bool *exit_code);
 
-void printLogo(std::vector<std::string>logo, int y, int x, int logo_len, int logo_height);
+struct pos {
+    int y;
+    int x;
+};
 
-void clearLogo(int y, int x, int logo_len, int logo_height);
 
+class Logo {
+
+    public:
+        struct pos pos;
+        struct pos size;
+        std::vector<std::string> logo;
+        Logo(int y, int x, int height, int length, std::vector<std::string> &logo);
+        bool print();
+        bool clear();
+    private:
+};
 
 #endif
