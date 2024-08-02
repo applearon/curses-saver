@@ -1,4 +1,4 @@
-* Option to change colour on hit
+* Option to change colour on hit - Done
 * Support for multiple objects
     * Collision
     * Object shatter/split on impact

@@ -50,6 +50,7 @@ void *mainLoop(void *inp) {
     int fadeOut = 2 + 0; // n showing at any time
     std::vector<int> lastFiveX(fadeOut);
     std::vector<int> lastFiveY(fadeOut);
+    std::vector<int> rainbow = {COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_BLUE, COLOR_MAGENTA};
     int color = 0;
     //clear();
     bool hyper_speed = false;
@@ -69,7 +70,6 @@ void *mainLoop(void *inp) {
             case 113: // q
             case 3: { // ctrl-c
                 move(0, 0);
-                printw("uwu");
                 return NULL;
             } break;
             case 104: { // h
@@ -96,8 +96,8 @@ void *mainLoop(void *inp) {
         }
         struct pos new_dir = logo.collision(max_size, dir);
         if (gay && (new_dir.x * dir.x == -1 || new_dir.y * dir.y == -1)) {
-            color = (color % 7) + 1;
-            init_pair(1, (color) + 1, COLOR_BLACK);
+            color = (color + 1) % rainbow.size();
+            init_pair(1, rainbow[color], COLOR_BLACK);
         }
         dir = new_dir;
         times = (times + 1) % fadeOut;
