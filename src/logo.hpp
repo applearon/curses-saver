@@ -18,15 +18,28 @@ class Logo {
         bool move(int y, int x, const pos &min_size, const pos &max_size);
         bool put(int y, int x, const pos &min_size, const pos &max_size);
         struct pos collision(const struct pos &max_size, const struct pos &old_dir);
+        bool staticGay = false;
 
         const pos getPos();
         const pos getSize();
     private:
+        bool gayPrint();
+        bool normalPrint();
         bool print();
         bool clear();
+
         pos position;
         pos size;
         std::vector<std::string> logo;
+        
+        long long time = 0;
+
+        int rainbow_size = 5;
+        int gay_y_dist = 1;
+        int gay_x_dist = 2;
+        int gay_interval = 3;
+        
+        
 };
 
 #endif

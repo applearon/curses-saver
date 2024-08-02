@@ -44,7 +44,32 @@ Logo::Logo(int y, int x, int height, int length, std::vector<std::string> &logo)
     this->logo = logo;
 };
 
+bool Logo::gayPrint() {
+    ::move(position.y, position.x);
+    for (int i = 0; i < size.y; ++i) {
+        ::move(position.y + i, position.x);
+        for (int j = 0; j < (int)logo[i].size(); ++j) {
+             int color_index = (((j / gay_y_dist) + (i / gay_x_dist) + time) / gay_interval)  % rainbow_size;
+            attron(COLOR_PAIR(color_index + 2));
+            printw("%c", logo[i].data()[j]);
+            attroff(COLOR_PAIR(color_index + 2));
+        }
+        printw("\n");
+    }
+    time++;
+
+    return true;
+};
+
 bool Logo::print() {
+    if (staticGay) {
+        return gayPrint();
+    } else {
+        return normalPrint();
+    }
+}
+
+bool Logo::normalPrint() {
     ::move(position.y, position.x);
     attron(COLOR_PAIR(1));
     for (int i = 0; i < size.y; ++i) {
@@ -94,6 +119,7 @@ struct pos Logo::collision(const struct pos &max_size, const struct pos &old_dir
     }
     return out;
 }
+
 
 const pos Logo::getPos() {
     return this->position;

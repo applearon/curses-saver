@@ -51,6 +51,9 @@ void *mainLoop(void *inp) {
     std::vector<int> lastFiveX(fadeOut);
     std::vector<int> lastFiveY(fadeOut);
     std::vector<int> rainbow = {COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_BLUE, COLOR_MAGENTA};
+    for (std::size_t i = 2; i < rainbow.size() + 2; i++) {
+        init_pair(i, rainbow[i - 2], COLOR_BLACK);
+    }
     int color = 0;
     //clear();
     bool hyper_speed = false;
@@ -77,7 +80,17 @@ void *mainLoop(void *inp) {
             } break;
             case 103: { // g
                 gay = !gay;
+                logo.staticGay = false;
+                if (gay) {
+                    init_pair(1, rainbow[color], COLOR_BLACK);
+                } else {
+                    init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
+                }
+            } break;
+            case 119: { // w
                 init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
+                gay = false;
+                logo.staticGay = !logo.staticGay;
             } break;
             case KEY_F(4): { // esc
                     debug = !debug;
@@ -85,15 +98,15 @@ void *mainLoop(void *inp) {
             default: {
             }
         }
+        if (debug) {
+            move(0,0);
+            printw("%d\n%d", input, color / 5);
+        }
         curFrame = std::chrono::steady_clock::now();
         if (curFrame - prevFrame >= chrono_sleep_time || hyper_speed) {
         getmaxyx(stdscr, cols, rows);
         max_size = {cols, rows};
         //clear();
-        if (debug) {
-            move(0,0);
-            printw("%d\n%d", input, color / 5);
-        }
         struct pos new_dir = logo.collision(max_size, dir);
         if (gay && (new_dir.x * dir.x == -1 || new_dir.y * dir.y == -1)) {
             color = (color + 1) % rainbow.size();
