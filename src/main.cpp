@@ -44,8 +44,6 @@ void *mainLoop(void *inp) {
     //int last_inp = -1; // most recent input
     int rows,cols = 0;
     getmaxyx(stdscr, cols, rows);
-    int x_dir = -1;
-    int y_dir = -1;
     int y_mag = 1, x_mag = 2; // Slope
 
     int times = 0;
@@ -57,6 +55,8 @@ void *mainLoop(void *inp) {
     bool hyper_speed = false;
     bool gay = false;
     bool debug = false;
+    struct pos max_size;
+    struct pos dir = {1, 1};
     std::chrono::time_point<std::chrono::steady_clock> prevFrame = std::chrono::steady_clock::now();
     std::chrono::time_point<std::chrono::steady_clock> curFrame = std::chrono::steady_clock::now();
         while (true) {
@@ -88,36 +88,23 @@ void *mainLoop(void *inp) {
         curFrame = std::chrono::steady_clock::now();
         if (curFrame - prevFrame >= chrono_sleep_time || hyper_speed) {
         getmaxyx(stdscr, cols, rows);
+        max_size = {cols, rows};
         //clear();
         if (debug) {
             move(0,0);
             printw("%d\n%d", input, color / 5);
         }
-        if (logo.getPos().y >= cols - logo.getSize().y) {
-            y_dir = -1;
-        } else if (logo.getPos().y <= 0) {
-            y_dir = 1;
+        struct pos new_dir = logo.collision(max_size, dir);
+        if (gay && (new_dir.x * dir.x == -1 || new_dir.y * dir.y == -1)) {
+            color = (color % 7) + 1;
+            init_pair(1, (color) + 1, COLOR_BLACK);
         }
-        if (logo.getPos().x >= rows - logo.getSize().x) {
-            x_dir = -1;
-        } else if (logo.getPos().x <= 1) {
-            x_dir = 1;
-        }
-        //logo.clear();
-        //logo.pos.y += y_dir * y_mag;
-        //logo.pos.x += x_dir * x_mag;
-        if (gay) {
-            color = (color % 70) + 1;
-            init_pair(1, (color / 10) + 1, COLOR_BLACK);
-        }
+        dir = new_dir;
         times = (times + 1) % fadeOut;
         lastFiveX[times] = logo.getPos().x;
         lastFiveY[times] = logo.getPos().y;
         prevFrame = curFrame;
-        logo.move(y_dir * y_mag, x_dir * x_mag, {0, 0}, {rows, cols});
-        //logo.print();
-        //clearLogo(lastFiveY[(times + 1) % fadeOut], lastFiveX[(times + 1) % fadeOut], logo_len, logo_height);
-        //printLogo(logo, y, x, logo_len, logo_height);
+        logo.move(dir.y * y_mag, dir.x * x_mag, {0, 0}, max_size);
         refresh();
         }
     }

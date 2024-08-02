@@ -13,17 +13,17 @@ struct pos {
 
 
 class Logo {
-
     public:
         Logo(int y, int x, int height, int length, std::vector<std::string> &logo);
         bool move(int y, int x, const pos &min_size, const pos &max_size);
         bool put(int y, int x, const pos &min_size, const pos &max_size);
-        bool print();
-        bool clear();
+        struct pos collision(const struct pos &max_size, const struct pos &old_dir);
 
         const pos getPos();
         const pos getSize();
     private:
+        bool print();
+        bool clear();
         pos position;
         pos size;
         std::vector<std::string> logo;

@@ -34,6 +34,10 @@ std::vector<std::string> getLogoFromFile(char *filename, int *logo_len, int *num
     return output;
 }
 
+/*
+ * Logo Object
+ */
+
 Logo::Logo(int y, int x, int height, int length, std::vector<std::string> &logo) {
     this->position = {y, x};
     this->size = {height, length};
@@ -76,9 +80,26 @@ bool Logo::put(int y, int x, const pos &min_size, const pos &max_size) {
     return true;
 }
 
+struct pos Logo::collision(const struct pos &max_size, const struct pos &old_dir) {
+    struct pos out = {old_dir.y, old_dir.x};
+    if (getPos().y >= max_size.y - getSize().y) {
+        out.y = -1;
+    } else if (getPos().y <= 0) {
+        out.y = 1;
+    }
+    if (getPos().x >= max_size.x - getSize().x) {
+        out.x = -1;
+    } else if (getPos().x <= 1) {
+        out.x = 1;
+    }
+    return out;
+}
+
 const pos Logo::getPos() {
     return this->position;
 }
 const pos Logo::getSize() {
     return this->size;
 }
+
+
