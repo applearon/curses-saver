@@ -11,7 +11,7 @@ endif
 ifeq ($(IS_DEBUG), 1)
 	CFLAGS += -fsanitize=address
 endif
-
+CC += -std=c++11
 BINARY=curses-saver
 OUT=./out
 OBJS=$(patsubst src/%.cpp,out/%.o,$(wildcard src/*.cpp))
