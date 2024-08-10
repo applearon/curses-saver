@@ -41,7 +41,7 @@ void *mainLoop(void *inp) {
     int frame_rate = data->frame_rate;
     std::chrono::milliseconds chrono_sleep_time(1000 / frame_rate);
     int input = -1;
-    //int last_inp = -1; // most recent input
+    int last_inp = -1; // most recent input
     int rows,cols = 0;
     getmaxyx(stdscr, cols, rows);
     int y_mag = 1, x_mag = 2; // Slope
@@ -66,36 +66,36 @@ void *mainLoop(void *inp) {
         while (true) {
         timeout(0);
         input = getch();
-       //if (input != -1) {
-       //    last_inp = input;
-       //}
-        switch (input) {
-            case 113: // q
-            case 3: { // ctrl-c
-                move(0, 0);
-                return NULL;
-            } break;
-            case 104: { // h
-                hyper_speed = !hyper_speed;
-            } break;
-            case 103: { // g
-                gay = !gay;
-                logo.staticGay = false;
-                if (gay) {
-                    init_pair(1, rainbow[color], COLOR_BLACK);
-                } else {
+       if (input != -1) {
+           last_inp = input;
+            switch (last_inp) {
+                case 113: // q
+                case 3: { // ctrl-c
+                    move(0, 0);
+                    return NULL;
+                } break;
+                case 104: { // h
+                    hyper_speed = !hyper_speed;
+                } break;
+                case 103: { // g
+                    gay = !gay;
+                    logo.staticGay = false;
+                    if (gay) {
+                        init_pair(1, rainbow[color], COLOR_BLACK);
+                    } else {
+                        init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
+                    }
+                } break;
+                case 119: { // w
                     init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
+                    gay = false;
+                    logo.staticGay = !logo.staticGay;
+                } break;
+                case KEY_F(4): { // esc
+                        debug = !debug;
+                } break;
+                default: {
                 }
-            } break;
-            case 119: { // w
-                init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
-                gay = false;
-                logo.staticGay = !logo.staticGay;
-            } break;
-            case KEY_F(4): { // esc
-                    debug = !debug;
-            } break;
-            default: {
             }
         }
         if (debug) {
@@ -148,32 +148,13 @@ int main(int argc, char *argv[0]) {
         return 1;
     }
 
-    //pthread_t main_loop;
-
-    //if (pthread_mutex_init(&lock, NULL) != 0) {
-    //   printf("\nMutex init failed :(\n");
-    //    return 1;
-    //}
     Logo logo_obj(0, 0, logo_height, logo_len, logo);
     int input = INT_MIN;
     bool new_inp = true;
     int fps = 15;
     struct loopData loopData = {&input, &new_inp, logo_obj, fps};
-    //pthread_create(&main_loop, NULL, mainLoop, &loopData);
     mainLoop(&loopData);
-   // while (input != 3) {
-   //     input = getch();
-   //     pthread_mutex_lock(&lock);
-   //     new_inp = true;
-   //     pthread_mutex_unlock(&lock);
-   // }
-    //pthread_join(main_loop, NULL);
     endwin();
-    //for (int i = 0; i < logo_height; ++i) {
-    //    free(logo[i]);
-    //}
-    //free(logo);
-    //pthread_mutex_destroy(&lock);
     printf("Exiting gracefully...\n");
     return 0;
 }
