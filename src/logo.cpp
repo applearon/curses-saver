@@ -8,7 +8,7 @@
 #include <vector>
 
 
-std::vector<std::string> getLogoFromFile(char *filename, int *logo_len, int *num_lines, bool *exit_code) { // logo_len -> width; // num_lines -> height
+std::vector<std::string> getLogoFromFile(const char *filename, int *logo_len, int *num_lines, bool *exit_code) { // logo_len -> width; // num_lines -> height
     std::string out;
     std::ifstream file;
 

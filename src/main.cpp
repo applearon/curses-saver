@@ -47,7 +47,7 @@ void *mainLoop(void *inp) {
     int y_mag = 1, x_mag = 2; // Slope
 
     int times = 0;
-    int fadeOut = 2 + 0; // n showing at any time
+    int fadeOut = 1 + 0; // n showing at any time
     std::vector<int> lastFiveX(fadeOut);
     std::vector<int> lastFiveY(fadeOut);
     std::vector<int> rainbow = {COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_BLUE, COLOR_MAGENTA};
@@ -130,6 +130,12 @@ int main(int argc, char *argv[0]) {
         return 1;
     }
     char *file_path = argv[1];
+    Config conf;
+    if (!conf.hasLoaded()) {
+        std::cout << "Config File Failed to load..." << std::endl;
+        return 1;
+    }
+    conf.logo_path = file_path;
 
     initscr();
     if (has_colors() == false) {
@@ -141,7 +147,7 @@ int main(int argc, char *argv[0]) {
     bool file_succ;
     int logo_len = 0;
     int logo_height = 0;
-    std::vector<std::string> logo = getLogoFromFile(file_path, &logo_len, &logo_height, &file_succ);
+    std::vector<std::string> logo = getLogoFromFile(conf.logo_path.data(), &logo_len, &logo_height, &file_succ);
     if (!file_succ) {
         endwin();
         printf("File %s couldn't be opened.\n", file_path);
@@ -151,11 +157,6 @@ int main(int argc, char *argv[0]) {
     Logo logo_obj(0, 0, logo_height, logo_len, logo);
     int input = INT_MIN;
     bool new_inp = true;
-    Config conf;
-    if (!conf.hasLoaded()) {
-        std::cout << "Config File Failed to load..." << std::endl;
-        return 1;
-    }
     int fps = conf.fps;
     struct loopData loopData = {&input, &new_inp, logo_obj, fps};
     mainLoop(&loopData);

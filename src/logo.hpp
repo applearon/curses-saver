@@ -4,7 +4,7 @@
 #include <vector>
 #include <stdbool.h>
 
-std::vector<std::string> getLogoFromFile(char *filename, int *logo_len, int *num_lines, bool *exit_code);
+std::vector<std::string> getLogoFromFile(const char *filename, int *logo_len, int *num_lines, bool *exit_code);
 
 struct pos {
     int y;
