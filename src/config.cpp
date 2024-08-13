@@ -12,6 +12,10 @@ int testFunc() {
     return 69;
 }
 
+Config::Config() {
+    // use default values;
+}
+
 Config::Config(std::string filename) {
     std::ifstream file;
     file.open(filename);

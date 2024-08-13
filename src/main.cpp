@@ -8,7 +8,8 @@
 // C++ stuffs yeah idk
 #include<vector>
 #include<chrono>
-//#include "config.hpp"
+#include<iostream>
+#include "config.hpp"
 #include "logo.hpp"
 
 #ifdef _WIN32
@@ -23,7 +24,6 @@ struct loopData {
     Logo &logo;
     int frame_rate;
 };
-
 
 
 void *mainLoop(void *inp) {
@@ -151,7 +151,12 @@ int main(int argc, char *argv[0]) {
     Logo logo_obj(0, 0, logo_height, logo_len, logo);
     int input = INT_MIN;
     bool new_inp = true;
-    int fps = 15;
+    Config conf;
+    if (!conf.hasLoaded()) {
+        std::cout << "Config File Failed to load..." << std::endl;
+        return 1;
+    }
+    int fps = conf.fps;
     struct loopData loopData = {&input, &new_inp, logo_obj, fps};
     mainLoop(&loopData);
     endwin();
