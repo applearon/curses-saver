@@ -18,15 +18,12 @@
 #include<unistd.h>
 #endif
 
-struct loopData {
-    int *inp;
-    bool *new_inp;
-    Logo &logo;
-    int frame_rate;
+enum {
+    PURPLE_PAIR = 1
 };
 
-
-void *mainLoop(void *inp) {
+void *mainLoop(Logo &logo, Config &config) {
+    // ncurses stuff
     initscr();
     curs_set(0);
     //cbreak();
@@ -34,11 +31,10 @@ void *mainLoop(void *inp) {
     noecho();
     keypad(stdscr, TRUE);
     start_color();
-    init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(PURPLE_PAIR, COLOR_MAGENTA, COLOR_BLACK);
+    attron(COLOR_PAIR(PURPLE_PAIR));
 
-    struct loopData *data = (struct loopData *) inp;
-    Logo logo = data->logo;
-    int frame_rate = data->frame_rate;
+    int frame_rate = config.fps;
     std::chrono::milliseconds chrono_sleep_time(1000 / frame_rate);
     int input = -1;
     int last_inp = -1; // most recent input
@@ -46,16 +42,11 @@ void *mainLoop(void *inp) {
     getmaxyx(stdscr, cols, rows);
     int y_mag = 1, x_mag = 2; // Slope
 
-    int times = 0;
-    int fadeOut = 1 + 0; // n showing at any time
-    std::vector<int> lastFiveX(fadeOut);
-    std::vector<int> lastFiveY(fadeOut);
     std::vector<int> rainbow = {COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_BLUE, COLOR_MAGENTA};
     for (std::size_t i = 2; i < rainbow.size() + 2; i++) {
         init_pair(i, rainbow[i - 2], COLOR_BLACK);
     }
     int color = 0;
-    //clear();
     bool hyper_speed = false;
     bool gay = false;
     bool debug = false;
@@ -81,13 +72,13 @@ void *mainLoop(void *inp) {
                     gay = !gay;
                     logo.staticGay = false;
                     if (gay) {
-                        init_pair(1, rainbow[color], COLOR_BLACK);
+                        attron(COLOR_PAIR(color + 2));
                     } else {
-                        init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
+                        attron(COLOR_PAIR(PURPLE_PAIR));
                     }
                 } break;
                 case 119: { // w
-                    init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
+                    attron(COLOR_PAIR(PURPLE_PAIR));
                     gay = false;
                     logo.staticGay = !logo.staticGay;
                 } break;
@@ -106,16 +97,12 @@ void *mainLoop(void *inp) {
         if (curFrame - prevFrame >= chrono_sleep_time || hyper_speed) {
         getmaxyx(stdscr, cols, rows);
         max_size = {cols, rows};
-        //clear();
         struct pos new_dir = logo.collision(max_size, dir);
         if (gay && (new_dir.x * dir.x == -1 || new_dir.y * dir.y == -1)) {
             color = (color + 1) % rainbow.size();
-            init_pair(1, rainbow[color], COLOR_BLACK);
+            attron(COLOR_PAIR(color + 2));
         }
         dir = new_dir;
-        times = (times + 1) % fadeOut;
-        lastFiveX[times] = logo.getPos().x;
-        lastFiveY[times] = logo.getPos().y;
         prevFrame = curFrame;
         logo.move(dir.y * y_mag, dir.x * x_mag, {0, 0}, max_size);
         refresh();
@@ -155,11 +142,7 @@ int main(int argc, char *argv[0]) {
     }
 
     Logo logo_obj(0, 0, logo_height, logo_len, logo);
-    int input = INT_MIN;
-    bool new_inp = true;
-    int fps = conf.fps;
-    struct loopData loopData = {&input, &new_inp, logo_obj, fps};
-    mainLoop(&loopData);
+    mainLoop(logo_obj, conf);
     endwin();
     printf("Exiting gracefully...\n");
     return 0;

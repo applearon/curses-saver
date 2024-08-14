@@ -71,12 +71,12 @@ bool Logo::print() {
 
 bool Logo::normalPrint() {
     ::move(position.y, position.x);
-    attron(COLOR_PAIR(1));
+    //attron(COLOR_PAIR(1));
     for (int i = 0; i < size.y; ++i) {
         ::move(position.y + i, position.x);
         printw("%s", logo[i].data());
     }
-    attroff(COLOR_PAIR(1));
+    //attroff(COLOR_PAIR(1));
     return true;
 };
 
