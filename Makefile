@@ -36,7 +36,3 @@ directories: ${OUT}
 
 ${OUT}:
 	$(dir_guard) $(OUT)
-
-
-run: ${OUT} ./out/$(BINARY)
-	./out/$(BINARY) ./examples/arch

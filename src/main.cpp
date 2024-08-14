@@ -11,6 +11,7 @@
 #include<iostream>
 #include "config.hpp"
 #include "logo.hpp"
+#include "cmdargs.hpp"
 
 #ifdef _WIN32
 #include<windows.h>
@@ -112,18 +113,22 @@ void *mainLoop(Logo &logo, Config &config) {
 }
 
 int main(int argc, char *argv[0]) {
-    if (argc < 2) {
-        printf("Usage: %s [ASCII PATH]\n", argv[0]);
-        return 1;
-    }
-    char *file_path = argv[1];
     Config conf;
-    if (!conf.hasLoaded()) {
-        std::cout << "Config File Failed to load..." << std::endl;
+    Arguments args(argc, argv);
+    if (args.Failed()) {
+        std::cout << "Arguments failed to load..." << std::endl;
         return 1;
     }
-    conf.logo_path = file_path;
-
+    if (args.config_path != "") {
+        conf = Config(args.config_path);
+    }
+    if (!conf.hasLoaded()) {
+        std::cout << "Config File " << args.config_path << " Failed to load..." << std::endl;
+        return 1;
+    }
+    if (args.logo_path != "") {
+        conf.logo_path = args.logo_path;
+    }
     initscr();
     if (has_colors() == false) {
         endwin();
@@ -137,10 +142,9 @@ int main(int argc, char *argv[0]) {
     std::vector<std::string> logo = getLogoFromFile(conf.logo_path.data(), &logo_len, &logo_height, &file_succ);
     if (!file_succ) {
         endwin();
-        printf("File %s couldn't be opened.\n", file_path);
+        std::cout << "File" << conf.logo_path << " couldn't be opened." << std::endl;
         return 1;
     }
-
     Logo logo_obj(0, 0, logo_height, logo_len, logo);
     mainLoop(logo_obj, conf);
     endwin();

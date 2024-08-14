@@ -12,6 +12,19 @@ int testFunc() {
     return 69;
 }
 
+bool trim(std::string &str) {
+    int first = str.find_first_not_of(' ');
+    int last = str.find_last_not_of(' ');
+    try {
+        str = str.substr(first, last - first + 1);
+        return true;
+    } catch (std::exception &err ) {
+        std::cout << "Failed to parse string: " << str << std::endl;
+        std::cout << err.what() << std::endl;
+        return false;
+    }
+}
+
 Config::Config() {
     // use default values;
 }
@@ -48,7 +61,13 @@ Config::Config(std::string filename) {
                         std::cout << "Option: " << option << ", Value: " << val << std::endl;
                         failed = true;
                     } 
-                } else if (false) { // other values
+                } else if (option == "logo") { // other values
+                    if (trim(val)) {
+                        this->logo_path = val;
+                    } else {
+                        failed = true;
+                    }
+                } else if (false) {
 
                 }
             }
