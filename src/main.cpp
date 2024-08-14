@@ -132,7 +132,7 @@ int main(int argc, char *argv[0]) {
     initscr();
     if (has_colors() == false) {
         endwin();
-        printf("L you don't have colours\n");
+        std::cout << "This terminal doesn't have colour support." << std::endl;
         return 1;
     }
     endwin();
