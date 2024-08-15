@@ -25,6 +25,7 @@ The configuration file has the following format:
 # Comments
 fps = 15
 logo = examples/arch
+saver_mode = false
 ```
 
 # Credits

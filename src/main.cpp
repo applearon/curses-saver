@@ -23,17 +23,21 @@ enum {
     PURPLE_PAIR = 1
 };
 
-void *mainLoop(Logo &logo, Config &config) {
+void mainLoop(Logo &logo, Config &config) {
     // ncurses stuff
     initscr();
     curs_set(0);
-    //cbreak();
+    cbreak();
     raw();
     noecho();
     keypad(stdscr, TRUE);
     start_color();
     init_pair(PURPLE_PAIR, COLOR_MAGENTA, COLOR_BLACK);
     attron(COLOR_PAIR(PURPLE_PAIR));
+    if (config.saver_mode) {
+        mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
+        printf("\033[?1003h");
+    }
 
     int frame_rate = config.fps;
     std::chrono::milliseconds chrono_sleep_time(1000 / frame_rate);
@@ -56,15 +60,21 @@ void *mainLoop(Logo &logo, Config &config) {
     std::chrono::time_point<std::chrono::steady_clock> prevFrame = std::chrono::steady_clock::now();
     std::chrono::time_point<std::chrono::steady_clock> curFrame = std::chrono::steady_clock::now();
         while (true) {
+        if (config.saver_mode) {
+            printf("\033[?1003h");
+        }
         timeout(0);
         input = getch();
-       if (input != -1) {
-           last_inp = input;
+        if (input != -1) {
+            last_inp = input;
+            if (config.saver_mode) {
+                return;
+            }
             switch (last_inp) {
                 case 113: // q
                 case 3: { // ctrl-c
                     move(0, 0);
-                    return NULL;
+                    return;
                 } break;
                 case 104: { // h
                     hyper_speed = !hyper_speed;
@@ -109,7 +119,7 @@ void *mainLoop(Logo &logo, Config &config) {
         refresh();
         }
     }
-    return NULL;
+    return;
 }
 
 int main(int argc, char *argv[0]) {
@@ -147,6 +157,7 @@ int main(int argc, char *argv[0]) {
     }
     Logo logo_obj(0, 0, logo_height, logo_len, logo);
     mainLoop(logo_obj, conf);
+    printf("\033[?1003l");
     endwin();
     printf("Exiting gracefully...\n");
     return 0;

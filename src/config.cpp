@@ -25,6 +25,13 @@ bool trim(std::string &str) {
     }
 }
 
+bool truthy(const std::string &str) {
+    return (str == "1" || str == "true");
+}
+bool falsey(const std::string &str) {
+    return (str == "0" || str == "false");
+}
+
 Config::Config() {
     // use default values;
 }
@@ -67,8 +74,19 @@ Config::Config(std::string filename) {
                     } else {
                         failed = true;
                     }
-                } else if (false) {
-
+                } else if (option == "saver_mode") {
+                    if (!trim(val)) {
+                        failed = true;
+                    } else {
+                        if (truthy(val)) {
+                            this->saver_mode = true;
+                        } else if (falsey(val)) {
+                            this->saver_mode = false;
+                        } else {
+                            std::cout << "Failed to understand value: " << val << " for saver_mode" << std::endl;
+                            failed = true;
+                        }
+                    }
                 }
             }
         }
