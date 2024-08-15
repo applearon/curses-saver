@@ -59,8 +59,8 @@ void mainLoop(Logo &logo, Config &config) {
     struct pos dir = {1, 1};
     std::chrono::time_point<std::chrono::steady_clock> prevFrame = std::chrono::steady_clock::now();
     std::chrono::time_point<std::chrono::steady_clock> curFrame = std::chrono::steady_clock::now();
-        while (true) {
-        if (config.saver_mode) {
+    while (true) {
+        if (config.saver_mode) { // see mouse movements
             printf("\033[?1003h");
         }
         timeout(0);
@@ -106,17 +106,17 @@ void mainLoop(Logo &logo, Config &config) {
         }
         curFrame = std::chrono::steady_clock::now();
         if (curFrame - prevFrame >= chrono_sleep_time || hyper_speed) {
-        getmaxyx(stdscr, cols, rows);
-        max_size = {cols, rows};
-        struct pos new_dir = logo.collision(max_size, dir);
-        if (gay && (new_dir.x * dir.x == -1 || new_dir.y * dir.y == -1)) {
-            color = (color + 1) % rainbow.size();
-            attron(COLOR_PAIR(color + 2));
-        }
-        dir = new_dir;
-        prevFrame = curFrame;
-        logo.move(dir.y * y_mag, dir.x * x_mag, {0, 0}, max_size);
-        refresh();
+            getmaxyx(stdscr, cols, rows);
+            max_size = {cols, rows};
+            struct pos new_dir = logo.collision(max_size, dir);
+            if (gay && (new_dir.x * dir.x == -1 || new_dir.y * dir.y == -1)) {
+                color = (color + 1) % rainbow.size();
+                attron(COLOR_PAIR(color + 2));
+            }
+            dir = new_dir;
+            prevFrame = curFrame;
+            logo.move(dir.y * y_mag, dir.x * x_mag, {0, 0}, max_size);
+            refresh();
         }
     }
     return;
