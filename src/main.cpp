@@ -122,7 +122,7 @@ void mainLoop(Logo &logo, Config &config) {
     return;
 }
 
-int main(int argc, char *argv[0]) {
+int main(int argc, char *argv[]) {
     Config conf;
     Arguments args(argc, argv);
     if (args.Failed()) {

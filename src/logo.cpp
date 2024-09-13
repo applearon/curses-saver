@@ -9,7 +9,6 @@
 
 
 std::vector<std::string> getLogoFromFile(const char *filename, int *logo_len, int *num_lines, bool *exit_code) { // logo_len -> width; // num_lines -> height
-    std::string out;
     std::ifstream file;
 
     file.open(filename);
@@ -42,6 +41,7 @@ Logo::Logo(int y, int x, int height, int length, std::vector<std::string> &logo)
     this->position = {y, x};
     this->size = {height, length};
     this->logo = logo;
+    this->direction = {1, 1};
 };
 
 bool Logo::gayPrint() {

@@ -18,6 +18,7 @@ class Logo {
         bool move(int y, int x, const pos &min_size, const pos &max_size);
         bool put(int y, int x, const pos &min_size, const pos &max_size);
         struct pos collision(const struct pos &max_size, const struct pos &old_dir);
+        struct pos direction;
         bool staticGay = false;
 
         const pos getPos();

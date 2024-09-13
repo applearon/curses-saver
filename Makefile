@@ -1,4 +1,4 @@
-CFLAGS=-Wall -g
+CFLAGS=-pedantic -Wall -Wextra -g
 LDFLAGS=-lncurses
 IS_DEBUG = ${DEBUG_BUILD}
 CC=
